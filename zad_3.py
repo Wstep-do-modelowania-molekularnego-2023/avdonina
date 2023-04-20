@@ -40,17 +40,17 @@ def policz_silę(k, x):
     return -k*x
 
 def main(k, m, n, dt):
-    T = 2*math.pi*(np.square(k/m))
+    T = 2*math.pi*(np.sqrt(k/m))
     x, v = 0, 1
     f = policz_silę(k, x)
     print('f', f)
-    dt = T/1000
-    full_time = n
+    dt = dt*T
+    full_time = T*n
     f_list = []
     x_list = []
     v_list = []
     e_list = []
-    t_list = range(int(full_time))
+    t_list = range(int(full_time/dt))
     for t_i in t_list:
         x, v, f = verlet(x, v, f, dt, k, m)
         # x, v, f = euler(x, v, f, dt, k, m)
