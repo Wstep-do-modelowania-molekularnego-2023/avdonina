@@ -24,7 +24,6 @@
 import math
 import matplotlib.pyplot as plt
 import numpy as np
-import statistics
 
 def verlet(x, v, f, dt, k, m):
     next_x = x + v*dt + (f * dt**2)/(2*m)
@@ -40,7 +39,7 @@ def policz_silę(k, x):
     return -k*x
 
 def main(k, m, n, dt):
-    T = 2*math.pi*(np.sqrt(k/m))
+    T = 2*math.pi*(np.sqrt(m/k))
     x, v = 0, 1
     f = policz_silę(k, x)
     print('f', f)
@@ -73,25 +72,24 @@ k_przez_m = k_co/miu
 print(math.sqrt(k_przez_m))
 
 f_list, x_list, v_list, e_list, t_list = main(k_co, miu, 10, dt)
-print(x_list)
-print(x_list)
-print(f_list)
+p_list = np.array(v_list)*miu
 
-# for i in range(len(e_list)-1):
-#     if e_list[i+1]-e_list[i] >= e_transition:
-#         print('przejście')
 
-# plt.plot(t_list, x_list, label='x(t)')
-# plt.title('oscylator harmoniczny dla ' + str(dt))
-# plt.xlabel('czas')
-# plt.ylabel('wartość')
-# plt.plot(t_list, p_list, label='p(t)')
-# plt.plot(t_list, e_list, label='E(t)')
-# plt.legend(['x(t)', 'p(t)', 'E(t)'])
-# plt.show()
+for i in range(len(e_list)-1):
+    if e_list[i+1]-e_list[i] >= e_transition:
+        print('przejście')
 
-# plt.plot(x_list, p_list)
-# plt.title('zależność położenia i pędu')
-# plt.xlabel('położenie')
-# plt.ylabel('pęd')
-# plt.show()
+plt.plot(t_list, x_list, label='x(t)')
+plt.title('oscylator harmoniczny dla ' + str(dt))
+plt.xlabel('czas')
+plt.ylabel('wartość')
+plt.plot(t_list, p_list, label='p(t)')
+plt.plot(t_list, e_list, label='E(t)')
+plt.legend(['x(t)', 'p(t)', 'E(t)'])
+plt.show()
+
+plt.plot(x_list, p_list)
+plt.title('zależność położenia i pędu')
+plt.xlabel('położenie')
+plt.ylabel('pęd')
+plt.show()
