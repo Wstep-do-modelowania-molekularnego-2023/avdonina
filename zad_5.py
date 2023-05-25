@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 # 5.1
 def quartic_function(x, a, e_2, yNz_prime, yNz):
-    return .04*(a*x**4 - 6*a*e_2*x**2 + yNz_prime*x + yNz)
+    return .04*(x**4 - 6*e_2*x**2 + yNz_prime*x + yNz)
 
 a = 1
 e_2 = 2.0
@@ -41,32 +41,32 @@ print('kalkulatorowo: ', np.exp((-0.9530+1.9319)/0.593))
 
 def metropolis(x, num_steps, step_size, fun):
     accepted_steps = []
-    x_new = x + np.random.choice([-step_size, step_size])
     while len(accepted_steps)<num_steps:
+        x_new = x + np.random.normal(0, 0.5)
         delta_energy = fun(x_new, a, e_2, yNz_prime, yNz) - fun(x, a, e_2, yNz_prime, yNz)
 
         if delta_energy < 0 or np.random.rand() < np.exp(-delta_energy):
             accepted_steps.append(x_new)
             x = x_new
-        x_new = x + np.random.normal(0, 0.5)
+        
     return accepted_steps
 
 num_steps = 10000  
 step_size = 0.25    
-kT = 0.6      
+kT = 0.593     
 x = 0.0
 
 accepted_steps = metropolis(x, num_steps, step_size, quartic_function)
 
 # Wykres rozkładu gęstości zaakceptowanych stanów, density=True daje unormowanie
-plt.hist(accepted_steps, bins=100, density=True)
+plt.hist(accepted_steps, bins=20, density=True)
 plt.show()
 
 # 5.4
-pos_steps = 0
-neg_steps = 0
-for x in accepted_steps:
-    if x>=0: pos_steps+=1
-    else: neg_steps+=1
-if neg_steps == 0: neg_steps = 0.1
+accepted_steps = np.array(accepted_steps)
+
+pos_steps = len(accepted_steps[accepted_steps>0])
+
+neg_steps = num_steps-pos_steps
+if neg_steps == 0: neg_steps=0.0001
 print('eksperymentalnie', pos_steps/neg_steps)
