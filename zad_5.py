@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 
 # 5.1
 def quartic_function(x, a, e_2, yNz_prime, yNz):
-    return a*x**4 - 6*a*e_2*x**2 + yNz_prime + yNz
+    return .04*(a*x**4 - 6*a*e_2*x**2 + yNz_prime*x + yNz)
 
-a = 1.0
+a = 1
 e_2 = 2.0
 yNz_prime = 5.0
 yNz = 0.2
@@ -13,23 +13,22 @@ yNz = 0.2
 x = np.linspace(-5, 5, 100)
 potential_energy = quartic_function(x, a, e_2, yNz_prime, yNz)
 
-plt.plot(x, potential_energy)
+plt.plot(x, np.array(potential_energy)/12)
 plt.xlabel('A')
 plt.ylabel('kcal/mol')
 
-# 5.2
+# 5.2 
 # dU(x)/dx = 0
-# 4x^3 - 24x + 5 = 0
-# x1 = -2.55 -> min
-# x2 = 0.21 -> max
-# x3 = 2.34 -> min
+# 0.16x^3 - 0.96x + 0.2 = 0
+# x1 = -2.5477 -> min
+# x2 = 0.2099 -> max
+# x3 = 2.3438 -> min
 
-# U(x1) = 42.28 - 78.03 - 12.75 +0.2= -48.3
-# U(x2) = 0.002 - 0.53 + 1.05 + 0.2 = 0.72
-# U(x3) = 29.92 -65.71 + 11.7 + 0.2 = -23,89
+# U(x1) = -1.9319
+# U(x3) = -0.9530
 # Boltzmann population distribution equation Ni = const * exp (-Ei/kT)
-# Stosunek populacji stanów = exp((-23.89+48.3)/0.593)=7.535
-print('kalkulatorowo: ', np.exp((-23.89+48.3)/0.593))
+# Stosunek populacji stanów = exp((-0.9530+1.9319)/0.593) = 5.2109
+print('kalkulatorowo: ', np.exp((-0.9530+1.9319)/0.593))
 
 # 5.3
 # Napisz własny program Monte-Carlo z zastosowaniem algorytmu Metropolisa
@@ -49,7 +48,7 @@ def metropolis(x, num_steps, step_size, fun):
         if delta_energy < 0 or np.random.rand() < np.exp(-delta_energy):
             accepted_steps.append(x_new)
             x = x_new
-        x_new = x + np.random.normal(0, 1)
+        x_new = x + np.random.normal(0, 0.5)
     return accepted_steps
 
 num_steps = 10000  
@@ -58,6 +57,7 @@ kT = 0.6
 x = 0.0
 
 accepted_steps = metropolis(x, num_steps, step_size, quartic_function)
+
 # Wykres rozkładu gęstości zaakceptowanych stanów, density=True daje unormowanie
 plt.hist(accepted_steps, bins=100, density=True)
 plt.show()
